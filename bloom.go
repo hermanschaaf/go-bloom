@@ -1,13 +1,13 @@
 package bloom
 
 import (
-	"github.com/pmylund/go-bitset"
-
 	"encoding/binary"
 	"fmt"
 	"hash"
 	"hash/fnv"
 	"math"
+
+	"github.com/pmylund/go-bitset"
 )
 
 type filter struct {
@@ -100,6 +100,11 @@ type CountingFilter struct {
 	b []*bitset.Bitset32
 }
 
+func (f *CountingFilter) GetBitset() []*bitset.Bitset32 {
+	return f.b
+}
+
+
 // Checks whether data was previously added to the filter. Returns true if
 // yes, with a false positive chance near the ratio specified upon creation
 // of the filter. The result cannot cannot be falsely negative (unless one
@@ -170,6 +175,10 @@ func NewCounting(n int, p float64) *CountingFilter {
 type LayeredFilter struct {
 	*filter
 	b []*bitset.Bitset32
+}
+
+func (f *LayeredFilter) GetBitset() []*bitset.Bitset32 {
+	return f.b
 }
 
 // Checks whether data was previously added to the filter. Returns the number of
